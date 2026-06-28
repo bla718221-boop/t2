@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link rel="stylesheet" href="rough.css">
+    <link rel="stylesheet" href="i.css">
+    <title> Example</title>
+</head>
+<body id = "finalBoss">
+    
+    <header class = "header">
+       
+          
+          <div class = "hamburger" id = "hamBurger">
+               <span></span>
+               <span></span>
+               <span></span>
+           </div>
+           <div class = "off-screen-menu" id = "offScreenMenu">
+                <img class = "p-icon" src = "profile_icon_transparent.svg" alt = "profile icon">
+                <hr>
+               <ul class = "nav-links">
+                   <li><a href="index.html">Home</a></li>
+                   <li><a href="#">About</a></li>
+                   <li><a href="#">Contact</a></li>
+               </ul>
+           </div>
+
+
+             <form>
+            <div class="search-container" id = "searchContainer">
+                <button type="submit" class = "search-btn" id = "searchBtn">
+                    <span    class="material-symbols-outlined">
+                    search
+                    </span>
+                </button>
+                <input type="text" placeholder="Search..." class="search-input" id = "searchInput">
+
+            </div>
+        </form>
+
+
+
+
+
+
+            <h1>Information</h1>
+
+    </header>
+    <div class = "a1">
+    <main class = 'main-con'>
+        <div class = 'content'>
+            
+              <div class = 'i-con'>
+                 <img src = "flags-of-US-Israel-and-Iran.jpg" class="image" alt = "Iran-US-Israel flag">
+
+              </div>
+              <div class = "about">
+                  <h2>
+                    Iran-US-Israel recent on going war
+                  </h2>
+
+                  <p>The conflict began in October 2025 and lasted for 13 days, ending in a temporary ceasefire that soon collapseed. In february 2026, a joint U.S-Israeli strike targeted Iran ,resulting in the death of Supreme Leader Ali Khamenei several senior officials.   
+                  </p>
+
+
+ 
+
+
+                </div>
+            
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+    
+    
+
+
+    </div>
+<script>
+   
+
+
+let offScreenMenu = document.getElementById("offScreenMenu");
+   offScreenMenu.style.left = "-350px";
+    const hamburger = document.getElementById("hamBurger");
+    hamburger.addEventListener("click", function(event){
+        event.preventDefault();
+        if(offScreenMenu.style.left === "0px"){
+            offScreenMenu.style.left = "-350px";
+            
+        } else{
+            offScreenMenu.style.left = "0px";
+            
+
+        }
+    })
+    document.addEventListener("click", function(e) {
+  if (!offScreenMenu.contains(e.target) && !hamburger.contains(e.target)) {
+    offScreenMenu.style.left = "-350px";
+     }
+    });
+
+    let searchContainer = document.getElementById("searchContainer");
+     searchContainer.style.width = "40px";
+    const searchBt = document.getElementById("searchBtn");
+    searchBt.addEventListener("click", function(event){
+        event.preventDefault();
+        if(searchContainer.style.width === "40px"){
+            searchContainer.style.width = "240px";
+            
+        }
+        else{
+            searchContainer.style.width = "40px";
+            
+
+        }
+    })
+    
+
+
+
+
+
+let element = document.getElementById("searchInput");
+    element.style.display = "none";
+    const searchBtn = document.getElementById("searchBtn");
+    searchBtn.addEventListener("click", function(event){
+        event.preventDefault();
+        if(element.style.display === "block"){
+            element.style.display = "none";
+            
+        }
+        else{
+            element.style.display = "block";
+            
+
+        }
+    })
+
+</script>
+</body> 
+  
+</html>
