@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lumen — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:       #f9f8f6;
+  --surface:  #ffffff;
+  --surface2: #f3f1ee;
+  --border:   #e5e2db;
+  --border-hover: #c8c4bb;
+  --text:     #1a1916;
+  --text-muted: #6b6760;
+  --text-dim:   #b0ada6;
+  --ink:      #1a1916;
+  --teal:     #2a7c6f;
+  --teal-light: #e8f4f2;
+  --teal-mid:   #4aa89a;
+  --teal-dim:   #a8d4cf;
+  --red:      #c0392b;
+  --green:    #27ae60;
+  --serif:    'Libre Baskerville', Georgia, serif;
+  --sans:     'Outfit', sans-serif;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 24px rgba(0,0,0,.07);
+}
+
+html { font-size:16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── PAGES ── */
+.page { display:none; min-height:100vh; flex-direction:column; }
+.page.active { display:flex; animation: fadeIn .35s ease; }
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  height: 62px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  letter-spacing: -.01em;
+}
+
+.logo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--teal);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.nav-center {
+  display: flex;
+  gap: .25rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.nav-tab {
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .02em;
+  padding: .35rem .9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .18s;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  padding: .3rem .6rem;
+  border-radius: 6px;
+  transition: background .15s;
+}
+.nav-user:hover { background: var(--surface2); }
+
+.nav-avatar-sm {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--teal-light);
+  border: 1.5px solid var(--teal-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .65rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+.nav-signout {
+  font-size: .75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: .3rem .5rem;
+  border-radius: 5px;
+  transition: color .15s, background .15s;
+}
+.nav-signout:hover { color: var(--red); background: #fdf0ef; }
+
+/* ── AUTH LAYOUT ── */
+.auth-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background: var(--bg);
+  gap: 5rem;
+}
+
+.auth-aside {
+  max-width: 300px;
+  flex-shrink: 0;
+}
+
+.aside-tag {
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: .75rem;
+}
+
+.aside-quote {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: .75rem;
+}
+
+.aside-cite {
+  font-size: .68rem;
+  color: var(--text-dim);
+  letter-spacing: .06em;
+}
+
+.aside-list {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.aside-list-label {
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: .4rem;
+}
+
+.aside-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  padding: .55rem .6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.aside-item:hover { background: var(--surface); }
+
+.aside-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--teal-mid);
+  margin-top: .45rem;
+  flex-shrink: 0;
+}
+
+.aside-item-text {
+  font-size: .82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── AUTH CARD ── */
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.75rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.auth-logo-sm {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+}
+
+.auth-title {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: .35rem;
+  letter-spacing: -.02em;
+}
+
+.auth-sub {
+  font-size: .82rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 1.1rem; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: 1.1rem;
+}
+
+label {
+  display: block;
+  font-size: .73rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: .38rem;
+  letter-spacing: .01em;
+}
+
+input[type=text],
+input[type=email],
+input[type=password] {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: .88rem;
+  padding: .65rem .9rem;
+  outline: none;
+  transition: border-color .18s, box-shadow .18s, background .18s;
+}
+input::placeholder { color: var(--text-dim); }
+input:focus {
+  border-color: var(--teal);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(42,124,111,.1);
+}
+input.error { border-color: var(--red) !important; box-shadow: 0 0 0 3px rgba(192,57,43,.09) !important; }
+
+.field-error {
+  font-size: .68rem;
+  color: var(--red);
+  margin-top: .3rem;
+  display: none;
+}
+.field-error.show { display: block; }
+
+/* strength */
+.strength-bar { display:flex; gap:3px; margin-top:.45rem; }
+.strength-seg { height:3px; flex:1; border-radius:2px; background:var(--border); transition:background .25s; }
+.strength-seg.weak   { background: var(--red); }
+.strength-seg.medium { background: #e67e22; }
+.strength-seg.strong { background: var(--green); }
+.strength-label { font-size:.63rem; color:var(--text-dim); margin-top:.28rem; }
+
+/* forgot row */
+.forgot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.check-wrap {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+input[type=checkbox] {
+  appearance: none;
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color .15s, background .15s;
+}
+input[type=checkbox]:checked {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+input[type=checkbox]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 2px;
+  width: 5px; height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(40deg);
+}
+
+.forgot-link {
+  font-size: .75rem;
+  color: var(--teal);
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.forgot-link:hover { opacity: .7; }
+
+/* terms */
+.terms-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+  font-size: .76rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.4rem;
+  cursor: pointer;
+  user-select: none;
+}
+.terms-wrap a { color: var(--teal); text-decoration: none; }
+.terms-wrap a:hover { text-decoration: underline; }
+
+/* divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin: 1.25rem 0;
+  font-size: .7rem;
+  color: var(--text-dim);
+  letter-spacing: .06em;
+}
+.divider::before,.divider::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* buttons */
+.btn-primary {
+  width: 100%;
+  padding: .72rem 1.25rem;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: opacity .18s, transform .1s, box-shadow .18s;
+  box-shadow: 0 2px 8px rgba(42,124,111,.25);
+}
+.btn-primary:hover { opacity:.9; box-shadow: 0 4px 14px rgba(42,124,111,.3); }
+.btn-primary:active { transform:scale(.99); }
+.btn-primary.loading .btn-text { visibility:hidden; }
+.btn-primary .spinner {
+  display:none;
+  width:16px; height:16px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .65s linear infinite;
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+}
+.btn-primary.loading .spinner { display:block; }
+@keyframes spin { to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+.btn-ghost {
+  width: 100%;
+  padding: .68rem 1.25rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: .82rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: .6rem;
+  transition: border-color .18s, color .18s, background .15s;
+}
+.btn-ghost:hover { border-color:var(--border-hover); color:var(--text); background:var(--surface2); }
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.4rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+.auth-switch a {
+  color: var(--teal);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--ink);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 500;
+  padding: .65rem 1.4rem;
+  border-radius: 8px;
+  opacity: 0;
+  transition: all .28s;
+  z-index: 999;
+  white-space: nowrap;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+
+/* ══════════════════════
+   PROFILE PAGE
+══════════════════════ */
+.profile-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 256px 1fr;
+}
+
+/* sidebar */
+.prof-sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.25rem;
+  gap: .25rem;
+}
+
+.prof-avatar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem .5rem 1.5rem;
+  gap: .6rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.prof-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--teal-light);
+  border: 2.5px solid var(--teal-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--teal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.prof-avatar:hover { border-color: var(--teal); }
+
+.prof-avatar-overlay {
+  position: absolute; inset: 0;
+  background: rgba(42,124,111,.7);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .18s;
+  font-size: .58rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: #fff;
+}
+.prof-avatar:hover .prof-avatar-overlay { opacity: 1; }
+
+.prof-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+}
+.prof-role {
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.prof-bio {
+  font-size: .74rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* sidebar nav */
+.snav-section {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: .35rem .6rem;
+  margin-top: .75rem;
+}
+
+.snav-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem .7rem;
+  border-radius: 7px;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.snav-item:hover { background: var(--surface2); color: var(--text); }
+.snav-item.active { background: var(--teal-light); color: var(--teal); }
+.snav-item .sicon { font-size: 1rem; opacity: .8; width: 1.2rem; text-align: center; }
+
+.snav-signout {
+  margin-top: auto;
+  font-size: .75rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: .5rem .7rem;
+  border-radius: 7px;
+  transition: all .15s;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+.snav-signout:hover { color: var(--red); background: #fdf0ef; }
+
+/* profile main */
+.prof-main {
+  background: var(--bg);
+  padding: 2.5rem 3rem;
+  overflow-y: auto;
+}
+
+.prof-section { display: none; }
+.prof-section.active { display: block; animation: fadeIn .28s ease; }
+
+.sec-header {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.sec-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.sec-sub {
+  font-size: .76rem;
+  color: var(--text-dim);
+  margin-top: .2rem;
+}
+
+/* stat cards */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .3rem;
+  letter-spacing: -.03em;
+}
+
+.stat-label {
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.stat-delta {
+  font-size: .68rem;
+  color: var(--green);
+  font-weight: 500;
+  margin-top: .4rem;
+}
+
+/* reading list */
+.read-list { display:flex; flex-direction:column; }
+
+.read-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .85rem .5rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .15s;
+}
+.read-item:hover { background: var(--surface); }
+
+.read-idx {
+  font-size: .68rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  width: 1.4rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.read-info { flex: 1; }
+.read-title {
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: var(--ink);
+  line-height: 1.35;
+  margin-bottom: .15rem;
+}
+.read-meta {
+  font-size: .68rem;
+  color: var(--text-dim);
+}
+
+.read-tag {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.read-tag.prog { background: var(--teal-light); color: var(--teal); }
+.read-tag.done { background: var(--surface2); color: var(--text-dim); }
+
+/* settings */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+}
+.settings-grid .field { margin-bottom: 0; }
+.full { grid-column: 1/-1; }
+
+.settings-sep {
+  grid-column: 1/-1;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-label { font-size: .83rem; font-weight: 500; color: var(--text); }
+.toggle-desc  { font-size: .7rem; color: var(--text-dim); margin-top: .1rem; }
+
+.toggle {
+  width: 38px; height: 22px;
+  background: var(--border);
+  border-radius: 11px;
+  cursor: pointer;
+  position: relative;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--teal); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px; left: 3px;
+  transition: transform .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.toggle.on::after { transform: translateX(16px); }
+
+.save-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: .75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.btn-save {
+  padding: .6rem 1.5rem;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+  box-shadow: 0 2px 8px rgba(42,124,111,.2);
+}
+.btn-save:hover { opacity: .88; }
+.btn-cancel {
+  padding: .6rem 1.2rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: .8rem;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.btn-cancel:hover { border-color: var(--border-hover); }
+
+/* plan card */
+.plan-card {
+  background: var(--surface);
+  border: 1.5px solid var(--teal-dim);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(42,124,111,.08);
+}
+.plan-name {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: .3rem;
+}
+.plan-desc {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.plan-sub { font-size: .73rem; color: var(--text-muted); margin-top: .15rem; }
+.plan-badge-pill {
+  background: var(--teal-light);
+  color: var(--teal);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .35rem .9rem;
+  border-radius: 20px;
+  border: 1px solid var(--teal-dim);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .auth-aside { display:none; }
+  .profile-layout { grid-template-columns:1fr; }
+  .prof-sidebar { flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid var(--border); }
+  .prof-avatar-block { flex-direction:row; border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .prof-main { padding:1.5rem; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .settings-grid { grid-template-columns:1fr; }
+  nav { padding:0 1.25rem; }
+  .nav-center { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-logo" onclick="goHome()">
+    <span class="logo-dot"></span> Lumen
+  </div>
+  <div class="nav-center" id="navCenter">
+    <button class="nav-tab active" onclick="showPage('login')" id="tabLogin">Sign In</button>
+    <button class="nav-tab" onclick="showPage('signup')" id="tabSignup">Join</button>
+  </div>
+  <div class="nav-right" id="navRight">
+    <span style="font-size:.78rem;color:var(--text-dim)">Already a member?</span>
+  </div>
+</nav>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════
+     LOGIN
+══════════════════ -->
+<div class="page active" id="loginPage">
+  <div class="auth-body">
+
+    <div class="auth-aside">
+      <div class="aside-tag">Editorial</div>
+      <p class="aside-quote">"The examined life is not only worth living — it is worth reading about."</p>
+      <p class="aside-cite">— Lumen Editorial Philosophy</p>
+      <div class="aside-list">
+        <div class="aside-list-label">Trending now</div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">The Silence Between Stars</div></div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">Why We Dream in Other Languages</div></div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">The Ethics of the Algorithm</div></div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-logo-sm"><span class="logo-dot"></span> Lumen</div>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-sub">Sign in to continue reading and pick up where you left off.</p>
+
+      <div class="field">
+        <label for="loginEmail">Email address</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com"/>
+        <span class="field-error" id="loginEmailErr">Please enter a valid email.</span>
+      </div>
+
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••"/>
+        <span class="field-error" id="loginPassErr">Password is required.</span>
+      </div>
+
+      <div class="forgot-row">
+        <label class="check-wrap">
+          <input type="checkbox" id="rememberMe"/> Remember me
+        </label>
+        <span class="forgot-link" onclick="forgotPass()">Forgot password?</span>
+      </div>
+
+      <button class="btn-primary" id="loginBtn" onclick="handleLogin()">
+        <span class="btn-text">Sign in</span>
+        <div class="spinner"></div>
+      </button>
+
+      <button class="btn-ghost" onclick="demoLogin()">Continue as guest reader</button>
+
+      <p class="auth-switch">New to Lumen? <a onclick="showPage('signup')">Create a free account</a></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════
+     SIGN UP
+══════════════════ -->
+<div class="page" id="signupPage">
+  <div class="auth-body">
+
+    <div class="auth-aside">
+      <div class="aside-tag">Free forever</div>
+      <p class="aside-quote">"To join a community of readers is to accept that you will be changed."</p>
+      <p class="aside-cite">— On Reading Together</p>
+      <div class="aside-list">
+        <div class="aside-list-label">What you'll get</div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">Unlimited access to all essays</div></div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">Personalised reading digest</div></div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">Annotate &amp; bookmark</div></div>
+        <div class="aside-item"><div class="aside-dot"></div><div class="aside-item-text">Join the letters forum</div></div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-logo-sm"><span class="logo-dot"></span> Lumen</div>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-sub">Free forever. No noise, no algorithm. Just ideas.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="signupFirst">First name</label>
+          <input type="text" id="signupFirst" placeholder="Ada"/>
+          <span class="field-error" id="signupFirstErr">Required.</span>
+        </div>
+        <div class="field">
+          <label for="signupLast">Last name</label>
+          <input type="text" id="signupLast" placeholder="Lovelace"/>
+          <span class="field-error" id="signupLastErr">Required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="signupEmail">Email address</label>
+        <input type="email" id="signupEmail" placeholder="you@example.com"/>
+        <span class="field-error" id="signupEmailErr">Enter a valid email.</span>
+      </div>
+
+      <div class="field">
+        <label for="signupPass">Password</label>
+        <input type="password" id="signupPass" placeholder="Min. 8 characters" oninput="checkStrength(this.value)"/>
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel"></div>
+        <span class="field-error" id="signupPassErr">Password must be at least 8 characters.</span>
+      </div>
+
+      <label class="terms-wrap">
+        <input type="checkbox" id="agreeTerms"/>
+        I agree to Lumen's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </label>
+
+      <button class="btn-primary" id="signupBtn" onclick="handleSignup()">
+        <span class="btn-text">Create account</span>
+        <div class="spinner"></div>
+      </button>
+
+      <p class="auth-switch">Already a member? <a onclick="showPage('login')">Sign in</a></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════
+     PROFILE
+══════════════════ -->
+<div class="page" id="profilePage">
+  <div class="profile-layout">
+
+    <aside class="prof-sidebar">
+      <div class="prof-avatar-block">
+        <div class="prof-avatar" onclick="showToast('Avatar upload coming soon','')">
+          <span id="avatarInitials">AL</span>
+          <div class="prof-avatar-overlay">Change</div>
+        </div>
+        <div style="text-align:center">
+          <div class="prof-name" id="profileName">Ada Lovelace</div>
+          <div class="prof-role" style="margin:.2rem 0">Founding Member</div>
+          <div class="prof-bio" id="profileBio">Philosopher of mind.</div>
+        </div>
+      </div>
+
+      <div class="snav-section">Account</div>
+      <div class="snav-item active" onclick="switchTab('overview',this)"><span class="sicon">⊡</span> Overview</div>
+      <div class="snav-item" onclick="switchTab('reading',this)"><span class="sicon">⊚</span> Reading history</div>
+      <div class="snav-item" onclick="switchTab('settings',this)"><span class="sicon">⊟</span> Settings</div>
+      <div class="snav-section">Subscription</div>
+      <div class="snav-item" onclick="switchTab('billing',this)"><span class="sicon">◈</span> Plan &amp; billing</div>
+
+      <div class="snav-signout" onclick="handleSignOut()">Sign out</div>
+    </aside>
+
+    <main class="prof-main">
+
+      <!-- OVERVIEW -->
+      <section class="prof-section active" id="tab-overview">
+        <div class="sec-header">
+          <div><div class="sec-title">Your Dashboard</div><div class="sec-sub">A portrait of your reading life</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value">142</div>
+            <div class="stat-label">Essays read</div>
+            <div class="stat-delta">↑ 12 this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">38h</div>
+            <div class="stat-label">Reading time</div>
+            <div class="stat-delta">↑ 4h this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">27</div>
+            <div class="stat-label">Bookmarks</div>
+            <div class="stat-delta">↑ 3 new</div>
+          </div>
+        </div>
+
+        <div class="sec-header" style="margin-top:.5rem"><div><div class="sec-title" style="font-size:1.15rem">Continue reading</div></div></div>
+        <div class="read-list">
+          <div class="read-item"><span class="read-idx">1</span><div class="read-info"><div class="read-title">The Cartography of Grief</div><div class="read-meta">Elena Marchetti · Philosophy · 67% complete</div></div><span class="read-tag prog">In progress</span></div>
+          <div class="read-item"><span class="read-idx">2</span><div class="read-info"><div class="read-title">Against Productivity: A Manifesto</div><div class="read-meta">James Okafor · Culture · 12% complete</div></div><span class="read-tag prog">In progress</span></div>
+          <div class="read-item"><span class="read-idx">3</span><div class="read-info"><div class="read-title">What Language Cannot Say</div><div class="read-meta">Dr. Yu Lin · Linguistics · Saved 3 days ago</div></div><span class="read-tag">Saved</span></div>
+        </div>
+      </section>
+
+      <!-- READING HISTORY -->
+      <section class="prof-section" id="tab-reading">
+        <div class="sec-header"><div><div class="sec-title">Reading History</div><div class="sec-sub">Your complete archive — 142 essays</div></div></div>
+        <div class="read-list">
+          <div class="read-item"><span class="read-idx">01</span><div class="read-info"><div class="read-title">The Silence Between Stars</div><div class="read-meta">Cosmology · Apr 28 · 24 min read</div></div><span class="read-tag done">Done</span></div>
+          <div class="read-item"><span class="read-idx">02</span><div class="read-info"><div class="read-title">Why We Dream in Other Languages</div><div class="read-meta">Psychology · Apr 22 · 18 min read</div></div><span class="read-tag done">Done</span></div>
+          <div class="read-item"><span class="read-idx">03</span><div class="read-info"><div class="read-title">The Ethics of the Algorithm</div><div class="read-meta">Technology · Apr 15 · 31 min read</div></div><span class="read-tag done">Done</span></div>
+          <div class="read-item"><span class="read-idx">04</span><div class="read-info"><div class="read-title">On Being Translated</div><div class="read-meta">Language · Apr 9 · 15 min read</div></div><span class="read-tag done">Done</span></div>
+          <div class="read-item"><span class="read-idx">05</span><div class="read-info"><div class="read-title">Memory as a Political Act</div><div class="read-meta">History · Apr 2 · 28 min read</div></div><span class="read-tag done">Done</span></div>
+          <div class="read-item"><span class="read-idx">06</span><div class="read-info"><div class="read-title">The Aesthetics of Slowness</div><div class="read-meta">Culture · Mar 28 · 22 min read</div></div><span class="read-tag done">Done</span></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="prof-section" id="tab-settings">
+        <div class="sec-header"><div><div class="sec-title">Settings</div><div class="sec-sub">Manage your profile and preferences</div></div></div>
+
+        <div class="settings-grid">
+          <div class="settings-sep">Personal information</div>
+          <div class="field"><label>First name</label><input type="text" id="settingsFirst" value="Ada"/></div>
+          <div class="field"><label>Last name</label><input type="text" id="settingsLast" value="Lovelace"/></div>
+          <div class="field full"><label>Email address</label><input type="email" id="settingsEmail" value="ada@lovelace.io"/></div>
+          <div class="field full"><label>Bio</label><input type="text" id="settingsBio" value="Philosopher of mind, reader of everything."/></div>
+          <div class="settings-sep">Notifications</div>
+        </div>
+
+        <div class="toggle-row"><div><div class="toggle-label">Weekly digest</div><div class="toggle-desc">New essays curated for your tastes every Sunday</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Editor's letter</div><div class="toggle-desc">Monthly editorial notes from the team</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Reading reminders</div><div class="toggle-desc">Gentle nudges to finish bookmarked essays</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+
+        <div class="save-row">
+          <button class="btn-cancel">Cancel</button>
+          <button class="btn-save" onclick="saveSettings()">Save changes</button>
+        </div>
+      </section>
+
+      <!-- BILLING -->
+      <section class="prof-section" id="tab-billing">
+        <div class="sec-header"><div><div class="sec-title">Plan &amp; Billing</div><div class="sec-sub">Your current subscription</div></div></div>
+        <div class="plan-card">
+          <div>
+            <div class="plan-name">Current plan</div>
+            <div class="plan-desc">Founding Member</div>
+            <div class="plan-sub">Free forever · Joined May 2026</div>
+          </div>
+          <div class="plan-badge-pill">Active</div>
+        </div>
+        <div class="read-list">
+          <div class="read-item"><span class="read-idx">✓</span><div class="read-info"><div class="read-title">Unlimited essay access</div><div class="read-meta">All 4,200+ essays in the archive</div></div><span class="read-tag prog">Included</span></div>
+          <div class="read-item"><span class="read-idx">✓</span><div class="read-info"><div class="read-title">Annotations &amp; bookmarks</div><div class="read-meta">Unlimited personal annotations</div></div><span class="read-tag prog">Included</span></div>
+          <div class="read-item"><span class="read-idx">✓</span><div class="read-info"><div class="read-title">Letters forum</div><div class="read-meta">Participate in reader discussions</div></div><span class="read-tag prog">Included</span></div>
+          <div class="read-item"><span class="read-idx">+</span><div class="read-info"><div class="read-title">Print subscription</div><div class="read-meta">Quarterly print edition mailed to you</div></div><span class="read-tag" style="cursor:pointer" onclick="showToast('Print subscriptions coming soon','')">Upgrade</span></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+let currentUser = null;
+
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.getElementById(p+'Page').classList.add('active');
+  ['Login','Signup'].forEach(n => {
+    const t = document.getElementById('tab'+n);
+    if(t) t.classList.remove('active');
+  });
+  if(p==='login'&&document.getElementById('tabLogin')) document.getElementById('tabLogin').classList.add('active');
+  if(p==='signup'&&document.getElementById('tabSignup')) document.getElementById('tabSignup').classList.add('active');
+}
+
+function goHome() { showPage(currentUser?'profile':'login'); }
+
+function switchTab(name, el) {
+  document.querySelectorAll('.prof-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  let ok = true;
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('loginEmailErr','loginEmail');ok=false;}else clearErr('loginEmailErr','loginEmail');
+  if(!pass){showErr('loginPassErr','loginPass');ok=false;}else clearErr('loginPassErr','loginPass');
+  if(!ok)return;
+  setLoad('loginBtn',true);
+  setTimeout(()=>{ setLoad('loginBtn',false); enterProfile('Ada','Lovelace',email); showToast('Welcome back to Lumen','success'); },1400);
+}
+
+function demoLogin() {
+  setLoad('loginBtn',true);
+  setTimeout(()=>{ setLoad('loginBtn',false); enterProfile('Guest','Reader','guest@lumen.io'); showToast('Browsing as guest',''); },900);
+}
+
+function forgotPass() {
+  const e=document.getElementById('loginEmail').value.trim();
+  if(!e){showToast('Enter your email first','error');document.getElementById('loginEmail').focus();return;}
+  showToast('Reset link sent to '+e,'success');
+}
+
+function handleSignup() {
+  const first=document.getElementById('signupFirst').value.trim();
+  const last =document.getElementById('signupLast').value.trim();
+  const email=document.getElementById('signupEmail').value.trim();
+  const pass =document.getElementById('signupPass').value;
+  const agreed=document.getElementById('agreeTerms').checked;
+  let ok=true;
+  if(!first){showErr('signupFirstErr','signupFirst');ok=false;}else clearErr('signupFirstErr','signupFirst');
+  if(!last){showErr('signupLastErr','signupLast');ok=false;}else clearErr('signupLastErr','signupLast');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('signupEmailErr','signupEmail');ok=false;}else clearErr('signupEmailErr','signupEmail');
+  if(pass.length<8){showErr('signupPassErr','signupPass');ok=false;}else clearErr('signupPassErr','signupPass');
+  if(!agreed){showToast('Please agree to the terms','error');ok=false;}
+  if(!ok)return;
+  setLoad('signupBtn',true);
+  setTimeout(()=>{ setLoad('signupBtn',false); enterProfile(first,last,email); showToast('Welcome to Lumen, '+first,'success'); },1600);
+}
+
+function enterProfile(first,last,email) {
+  currentUser={name:first+' '+last,email};
+  document.getElementById('avatarInitials').textContent=(first[0]+(last[0]||'')).toUpperCase();
+  document.getElementById('profileName').textContent=first+' '+last;
+  document.getElementById('settingsFirst').value=first;
+  document.getElementById('settingsLast').value=last;
+  document.getElementById('settingsEmail').value=email;
+  document.getElementById('navCenter').innerHTML=`
+    <button class="nav-tab active" onclick="showPage('profile')">Profile</button>`;
+  document.getElementById('navRight').innerHTML=`
+    <div class="nav-user" onclick="showPage('profile')">
+      <div class="nav-avatar-sm">${(first[0]+(last[0]||'')).toUpperCase()}</div>
+      <span style="font-size:.8rem;font-weight:500;color:var(--text)">${first}</span>
+    </div>
+    <span class="nav-signout" onclick="handleSignOut()">Sign out</span>`;
+  showPage('profile');
+}
+
+function handleSignOut() {
+  currentUser=null;
+  document.getElementById('navCenter').innerHTML=`
+    <button class="nav-tab active" onclick="showPage('login')" id="tabLogin">Sign In</button>
+    <button class="nav-tab" onclick="showPage('signup')" id="tabSignup">Join</button>`;
+  document.getElementById('navRight').innerHTML=`<span style="font-size:.78rem;color:var(--text-dim)">Already a member?</span>`;
+  showToast('Signed out','');
+  showPage('login');
+}
+
+function saveSettings() {
+  const first=document.getElementById('settingsFirst').value.trim();
+  const last =document.getElementById('settingsLast').value.trim();
+  const bio  =document.getElementById('settingsBio').value.trim();
+  if(first&&last){
+    document.getElementById('profileName').textContent=first+' '+last;
+    document.getElementById('avatarInitials').textContent=(first[0]+last[0]).toUpperCase();
+    if(bio) document.getElementById('profileBio').textContent=bio;
+    showToast('Settings saved','success');
+  }
+}
+
+function checkStrength(v) {
+  const segs=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+  const lbl=document.getElementById('strengthLabel');
+  segs.forEach(s=>s.className='strength-seg');
+  if(!v){lbl.textContent='';return;}
+  let score=0;
+  if(v.length>=8)score++;
+  if(v.length>=12)score++;
+  if(/[A-Z]/.test(v)&&/[0-9]/.test(v))score++;
+  if(/[^A-Za-z0-9]/.test(v))score++;
+  const cls=score<=1?'weak':score<=2?'medium':'strong';
+  const txt=score<=1?'Weak':score<=2?'Fair':score===3?'Good':'Strong';
+  for(let i=0;i<score;i++) segs[i].classList.add(cls);
+  lbl.textContent=txt;
+}
+
+function showErr(eid,iid){document.getElementById(eid).classList.add('show');document.getElementById(iid).classList.add('error');}
+function clearErr(eid,iid){document.getElementById(eid).classList.remove('show');document.getElementById(iid).classList.remove('error');}
+function setLoad(bid,on){const b=document.getElementById(bid);b.classList.toggle('loading',on);b.disabled=on;}
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+document.querySelectorAll('input').forEach(inp=>{
+  inp.addEventListener('input',()=>{
+    inp.classList.remove('error');
+    const e=document.getElementById(inp.id+'Err');
+    if(e) e.classList.remove('show');
+  });
+});
+</script>
+</body>
+</html>
